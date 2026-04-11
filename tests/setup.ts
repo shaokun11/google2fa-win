@@ -16,4 +16,16 @@ beforeEach(() => {
       dispatchEvent: vi.fn()
     }))
   })
+
+  Object.defineProperty(window, 'electron', {
+    writable: true,
+    value: {
+      openExternal: vi.fn(),
+      minimizeWindow: vi.fn(),
+      hideToTray: vi.fn(),
+      copyText: vi.fn(async (value: string) => {
+        await navigator.clipboard.writeText(value)
+      })
+    }
+  })
 })

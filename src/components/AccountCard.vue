@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { Account } from '../types/account'
 import { createTotpToken, getTokenProgress } from '../utils/totp'
 
@@ -11,10 +11,19 @@ const props = defineProps<{
 const token = computed(() => createTotpToken(props.account, props.now))
 const displayToken = computed(() => `${token.value.slice(0, 3)} ${token.value.slice(3)}`)
 const progress = computed(() => getTokenProgress(props.account.period, props.now))
+const copied = ref(false)
+
+const copyToken = async () => {
+  await window.electron.copyText(token.value)
+  copied.value = true
+  window.setTimeout(() => {
+    copied.value = false
+  }, 1200)
+}
 </script>
 
 <template>
-  <article data-testid="account-card" class="account-card">
+  <article data-testid="account-card" class="account-card" @dblclick="copyToken">
     <header class="account-card__header">
       <div class="account-card__avatar">{{ account.service[0] }}</div>
       <div>
@@ -23,10 +32,13 @@ const progress = computed(() => getTokenProgress(props.account.period, props.now
       </div>
     </header>
 
-    <button class="account-card__token" type="button">{{ displayToken }}</button>
+    <button class="account-card__token" type="button" @dblclick.stop="copyToken">{{ displayToken }}</button>
 
-    <div class="account-card__progress">
-      <span class="account-card__progress-bar" :style="{ width: `${progress}%` }" />
+    <div class="account-card__footer">
+      <div class="account-card__progress">
+        <span class="account-card__progress-bar" :style="{ width: `${progress}%` }" />
+      </div>
+      <span class="account-card__hint">{{ copied ? 'Copied' : 'Double click to copy' }}</span>
     </div>
   </article>
 </template>

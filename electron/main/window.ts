@@ -9,6 +9,7 @@ export const createMainWindow = (): BrowserWindow => {
     minHeight: 480,
     frame: false,
     titleBarStyle: 'hidden',
+    show: false,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js')
     }
