@@ -3,3 +3,9 @@
 /out/
 /.electron-vite/
 /.superpowers/
+/.playwright-mcp/
+/playwright-*.md
+/playwright-*.log
+/add-modal-snapshot.md
+/after-add-snapshot.md
+/final-playwright-start.md
