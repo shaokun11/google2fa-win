@@ -6,8 +6,8 @@ const accounts = [{
   service: 'Google',
   account: 'user@gmail.com',
   secret: 'JBSWY3DPEHPK3PXP',
-  algorithm: 'SHA1',
-  digits: 6,
+  algorithm: 'SHA1' as const,
+  digits: 6 as const,
   period: 30,
   order: 0,
   createdAt: 1

@@ -1,6 +1,8 @@
 {
   "name": "google2fa-desktop",
   "version": "0.1.0",
+  "description": "Windows-first desktop Google Authenticator compatible app built with Electron and Vue.",
+  "author": "Claude Code",
   "private": true,
   "type": "module",
   "main": "out/main/index.js",

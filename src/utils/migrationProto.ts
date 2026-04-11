@@ -57,7 +57,7 @@ export const encodeMigrationUrl = (accounts: Account[]): string => {
 
 export const decodeMigrationUrl = (url: string): Account[] => {
   const data = new URL(url).searchParams.get('data') ?? ''
-  const decoded = Payload.decode(fromBase64(decodeURIComponent(data))) as {
+  const decoded = Payload.decode(fromBase64(decodeURIComponent(data))) as unknown as {
     otpParameters: Array<{
       secret: Uint8Array
       name: string

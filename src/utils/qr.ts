@@ -2,7 +2,7 @@ import QrScanner from 'qr-scanner'
 import QRCode from 'qrcode'
 
 export const decodeQrImage = async (file: File): Promise<string> => {
-  return QrScanner.scanImage(file, { returnDetailedScanResult: false })
+  return QrScanner.scanImage(file)
 }
 
 export const generateQrDataUrl = async (value: string): Promise<string> => {
