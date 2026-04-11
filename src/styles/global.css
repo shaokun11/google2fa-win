@@ -25,7 +25,7 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--app-background);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--app-background) 94%, #ffffff 6%), var(--app-background));
   color: var(--text-primary);
 }
 
@@ -39,7 +39,7 @@ select {
 .app-shell {
   min-height: 100vh;
   padding: 24px;
-  background: var(--app-background);
+  background: transparent;
 }
 
 .app-header {
@@ -48,6 +48,11 @@ select {
   gap: 16px;
   align-items: center;
   margin-bottom: 20px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--card-background) 88%, transparent);
+  box-shadow: rgba(0, 0, 0, 0.06) 0 12px 32px;
+  backdrop-filter: blur(18px);
 }
 
 .app-header__brand {
@@ -91,6 +96,14 @@ select {
   background: var(--button-background);
   color: var(--text-primary);
   cursor: pointer;
+  transition: transform 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.app-header__actions button:hover,
+.base-button:hover,
+.ghost-button:hover,
+.account-card:hover {
+  transform: translateY(-1px);
 }
 
 .base-button {
@@ -113,11 +126,13 @@ select {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 18px;
-  background: var(--card-background);
-  box-shadow: rgba(0, 0, 0, 0.04) 0 2px 12px 0;
+  background: color-mix(in srgb, var(--card-background) 94%, transparent);
+  border: 1px solid color-mix(in srgb, var(--button-border) 90%, transparent);
+  box-shadow: rgba(0, 0, 0, 0.06) 0 12px 28px 0;
   user-select: none;
+  transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
 .account-card__header {
@@ -127,8 +142,8 @@ select {
 }
 
 .account-card__avatar {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -197,7 +212,7 @@ select {
 .base-modal {
   width: min(560px, 100%);
   border-radius: 20px;
-  background: var(--card-background);
+  background: color-mix(in srgb, var(--card-background) 96%, transparent);
   box-shadow: rgba(0, 0, 0, 0.18) 0 24px 64px;
   overflow: hidden;
 }
@@ -233,6 +248,14 @@ select {
 .tab-row {
   display: flex;
   gap: 8px;
+}
+
+.tab-row button {
+  border: 1px solid var(--button-border);
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: var(--button-background);
+  color: var(--text-primary);
 }
 
 .form-card__intro {
@@ -285,8 +308,8 @@ select {
   margin-top: 20px;
   padding: 20px;
   border-radius: 16px;
-  background: var(--card-background);
-  box-shadow: rgba(0, 0, 0, 0.04) 0 2px 12px 0;
+  background: color-mix(in srgb, var(--card-background) 96%, transparent);
+  box-shadow: rgba(0, 0, 0, 0.06) 0 12px 28px 0;
 }
 
 .export-preview__title {

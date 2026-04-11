@@ -1,6 +1,8 @@
 import { BrowserWindow, Tray, Menu, ipcMain, nativeImage, shell } from 'electron'
+import { join } from 'node:path'
 
 let tray: Tray | null = null
+let allowQuit = false
 
 export const registerIpcHandlers = (window: BrowserWindow) => {
   ipcMain.handle('shell:openExternal', async (_event, url: string) => {
@@ -15,13 +17,16 @@ export const registerIpcHandlers = (window: BrowserWindow) => {
     window.hide()
   })
 
-  ipcMain.handle('clipboard:writeText', (_event, value: string) => {
-    return value
+  ipcMain.handle('window:quit', () => {
+    allowQuit = true
+    window.close()
   })
 
+  ipcMain.handle('clipboard:writeText', (_event, value: string) => value)
+
   if (!tray) {
-    const image = nativeImage.createEmpty()
-    tray = new Tray(image)
+    const trayIcon = nativeImage.createFromPath(join(__dirname, '../assets/tray-icon.svg'))
+    tray = new Tray(trayIcon.resize({ width: 16, height: 16 }))
     tray.setToolTip('Google 2FA Desktop')
     tray.setContextMenu(Menu.buildFromTemplate([
       {
@@ -34,9 +39,10 @@ export const registerIpcHandlers = (window: BrowserWindow) => {
       {
         label: 'Exit',
         click: () => {
+          allowQuit = true
           tray?.destroy()
           tray = null
-          window.destroy()
+          window.close()
         }
       }
     ]))
@@ -45,5 +51,13 @@ export const registerIpcHandlers = (window: BrowserWindow) => {
       window.show()
       window.focus()
     })
+  }
+
+  return {
+    canQuit: () => allowQuit,
+    destroyTray: () => {
+      tray?.destroy()
+      tray = null
+    }
   }
 }

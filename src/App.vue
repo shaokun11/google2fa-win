@@ -53,7 +53,12 @@ const handleExportText = async (accounts: typeof accountStore.accounts.value) =>
   }
 
   const text = accounts.map(stringifyOtpAuthUri).join('\n')
-  await window.electron.copyText(text)
+
+  if (window.electron?.copyText) {
+    await window.electron.copyText(text)
+  } else {
+    await navigator.clipboard.writeText(text)
+  }
 }
 
 const handleSaveSettings = (payload: { theme: 'system' | 'light' | 'dark'; locale: 'system' | 'en' | 'zh' }) => {
@@ -63,11 +68,15 @@ const handleSaveSettings = (payload: { theme: 'system' | 'light' | 'dark'; local
 }
 
 const handleMinimize = async () => {
-  await window.electron.minimizeWindow()
+  if (window.electron?.minimizeWindow) {
+    await window.electron.minimizeWindow()
+  }
 }
 
 const handleClose = async () => {
-  await window.electron.hideToTray()
+  if (window.electron?.hideToTray) {
+    await window.electron.hideToTray()
+  }
 }
 
 const exportPreviewVisible = computed(() => exportPreview.value.length > 0)

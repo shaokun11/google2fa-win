@@ -14,7 +14,12 @@ const progress = computed(() => getTokenProgress(props.account.period, props.now
 const copied = ref(false)
 
 const copyToken = async () => {
-  await window.electron.copyText(token.value)
+  if (window.electron?.copyText) {
+    await window.electron.copyText(token.value)
+  } else {
+    await navigator.clipboard.writeText(token.value)
+  }
+
   copied.value = true
   window.setTimeout(() => {
     copied.value = false
@@ -32,13 +37,13 @@ const copyToken = async () => {
       </div>
     </header>
 
-    <button class="account-card__token" type="button" @dblclick.stop="copyToken">{{ displayToken }}</button>
+    <button class="account-card__token" type="button" @click="copyToken" @dblclick.stop="copyToken">{{ displayToken }}</button>
 
     <div class="account-card__footer">
       <div class="account-card__progress">
         <span class="account-card__progress-bar" :style="{ width: `${progress}%` }" />
       </div>
-      <span class="account-card__hint">{{ copied ? 'Copied' : 'Double click to copy' }}</span>
+      <span class="account-card__hint">{{ copied ? 'Copied' : 'Click or double click to copy' }}</span>
     </div>
   </article>
 </template>

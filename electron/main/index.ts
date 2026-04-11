@@ -4,16 +4,18 @@ import { registerIpcHandlers } from './ipc'
 
 app.whenReady().then(() => {
   const window = createMainWindow()
-  registerIpcHandlers(window)
+  const trayController = registerIpcHandlers(window)
 
   window.on('ready-to-show', () => {
     window.show()
   })
 
   window.on('close', (event) => {
-    if (!window.isDestroyed()) {
+    if (!trayController.canQuit()) {
       event.preventDefault()
       window.hide()
+    } else {
+      trayController.destroyTray()
     }
   })
 
