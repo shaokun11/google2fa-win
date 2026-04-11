@@ -1,22 +1,14 @@
-import { app, BrowserWindow } from 'electron'
-import { join } from 'node:path'
+import { app } from 'electron'
+import { createMainWindow } from './window'
+import { registerIpcHandlers } from './ipc'
 
-const createWindow = () => {
-  const window = new BrowserWindow({
-    width: 900,
-    height: 600,
-    webPreferences: {
-      preload: join(__dirname, '../preload/index.js')
-    }
-  })
+app.whenReady().then(() => {
+  registerIpcHandlers()
 
+  const window = createMainWindow()
   if (process.env.VITE_DEV_SERVER_URL) {
     window.loadURL(process.env.VITE_DEV_SERVER_URL)
   } else {
-    window.loadFile(join(__dirname, '../../index.html'))
+    window.loadFile('out/renderer/index.html')
   }
-}
-
-app.whenReady().then(() => {
-  createWindow()
 })

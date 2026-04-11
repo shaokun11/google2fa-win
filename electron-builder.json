@@ -1,0 +1,9 @@
+{
+  "appId": "com.example.google2fa.desktop",
+  "productName": "Google 2FA Desktop",
+  "files": ["out/**/*", "package.json"],
+  "win": {
+    "target": ["nsis"],
+    "artifactName": "google2fa-desktop-${version}.${ext}"
+  }
+}

@@ -22,6 +22,7 @@ export default defineConfig({
     }
   },
   renderer: {
+    root: '.',
     plugins: [vue()],
     build: {
       rollupOptions: {

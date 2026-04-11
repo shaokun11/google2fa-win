@@ -1,3 +1,5 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 
-contextBridge.exposeInMainWorld('electron', {})
+contextBridge.exposeInMainWorld('electron', {
+  openExternal: (url: string) => ipcRenderer.invoke('shell:openExternal', url)
+})
