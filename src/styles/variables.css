@@ -1,0 +1,19 @@
+export const LIGHT_THEME = {
+  background: '#f5f5f7',
+  cardBackground: '#ffffff',
+  textPrimary: '#1d1d1f',
+  textSecondary: 'rgba(0, 0, 0, 0.48)',
+  progress: '#0071e3',
+  buttonBackground: '#fafafc',
+  buttonBorder: 'rgba(0, 0, 0, 0.04)'
+}
+
+export const DARK_THEME = {
+  background: '#000000',
+  cardBackground: '#272729',
+  textPrimary: '#ffffff',
+  textSecondary: 'rgba(255, 255, 255, 0.48)',
+  progress: '#2997ff',
+  buttonBackground: '#272729',
+  buttonBorder: 'rgba(255, 255, 255, 0.08)'
+}
