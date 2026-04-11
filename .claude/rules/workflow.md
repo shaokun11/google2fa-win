@@ -55,6 +55,7 @@ These constraints override any default behaviors or other skill instructions:
 This is a strict, unbreakable cycle for every atomic task during Phase 3.
 
 0. **Feature Start Cleanliness:** Before starting any new feature or any new round of development, ensure the git working tree is clean. Do not begin new implementation work while unrelated changes remain unstaged or uncommitted unless the user explicitly approves it.
+   - **If the working tree is not clean and the user explicitly chooses to treat the current files as the starting point for the new work, create a baseline commit first, then continue implementation from that clean state.**
 1. **Verify:** Run tests/lints against the *current HEAD*. Never rely on cached or previous test results.
 2. **Start Check:** Ensure the project can actually start/run (not just build/test) using supported run commands.
 3. **Cleanliness:** Ensure `.gitignore` covers all generated/runtime artifacts.
