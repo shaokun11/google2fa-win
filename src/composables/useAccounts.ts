@@ -25,6 +25,22 @@ export const useAccounts = () => {
     persist()
   }
 
+  const updateAccount = (id: string, patch: Pick<Account, 'service' | 'account' | 'secret'>) => {
+    accounts.value = accounts.value.map((item) => (
+      item.id === id
+        ? { ...item, ...patch }
+        : item
+    ))
+    persist()
+  }
+
+  const removeAccount = (id: string) => {
+    accounts.value = accounts.value
+      .filter((item) => item.id !== id)
+      .map((item, index) => ({ ...item, order: index }))
+    persist()
+  }
+
   const filteredAccounts = computed(() => {
     const query = search.value.trim().toLowerCase()
     if (!query) {
@@ -36,5 +52,12 @@ export const useAccounts = () => {
       .sort((a, b) => a.order - b.order)
   })
 
-  return { accounts, search, filteredAccounts, addAccount }
+  return {
+    accounts,
+    search,
+    filteredAccounts,
+    addAccount,
+    updateAccount,
+    removeAccount
+  }
 }
