@@ -11,3 +11,5 @@
 /final-playwright-start.md
 /dev.log
 *.png
+dist/
+build/icon.svg
