@@ -14,7 +14,6 @@ import { useTheme } from './composables/useTheme'
 import { useTicker } from './composables/useTicker'
 import { useWaterRipple } from './composables/useWaterRipple'
 import { encodeMigrationUrl } from './utils/migrationProto'
-import { stringifyOtpAuthUri } from './utils/otpauthUri'
 import { generateQrDataUrl } from './utils/qr'
 import './styles/global.css'
 
@@ -86,7 +85,7 @@ const handleExportText = async (accounts: typeof accountStore.accounts.value) =>
     return
   }
 
-  const text = accounts.map(stringifyOtpAuthUri).join('\n')
+  const text = encodeMigrationUrl(accounts)
 
   if (window.electron?.copyText) {
     await window.electron.copyText(text)
