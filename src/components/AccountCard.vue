@@ -67,10 +67,45 @@ const stringHash = (value: string): number => {
 
 const hue = computed(() => stringHash(props.account.secret) % 360)
 
+const tiltX = ref(0)
+const tiltY = ref(0)
+const glareX = ref(50)
+const glareY = ref(50)
+const glareAlpha = ref(0)
+const isHovering = ref(false)
+
+const handleMouseMove = (e: MouseEvent) => {
+  const card = e.currentTarget as HTMLElement
+  const rect = card.getBoundingClientRect()
+  const x = e.clientX - rect.left
+  const y = e.clientY - rect.top
+  const centerX = rect.width / 2
+  const centerY = rect.height / 2
+
+  tiltX.value = ((y - centerY) / centerY) * -8
+  tiltY.value = ((x - centerX) / centerX) * 8
+  glareX.value = (x / rect.width) * 100
+  glareY.value = (y / rect.height) * 100
+  glareAlpha.value = 0.12
+  isHovering.value = true
+}
+
+const handleMouseLeave = () => {
+  tiltX.value = 0
+  tiltY.value = 0
+  glareAlpha.value = 0
+  isHovering.value = false
+}
+
 const cardStyle = computed(() => {
   const accent = `hsl(${hue.value} 70% 55%)`
   return {
-    borderLeft: `3px solid ${accent}`
+    borderLeft: `3px solid ${accent}`,
+    '--tilt-x': `${tiltX.value}deg`,
+    '--tilt-y': `${tiltY.value}deg`,
+    '--glare-x': `${glareX.value}%`,
+    '--glare-y': `${glareY.value}%`,
+    '--glare-alpha': glareAlpha.value
   }
 })
 
@@ -92,7 +127,15 @@ const avatarStyle = computed(() => {
 </script>
 
 <template>
-  <article data-testid="account-card" class="account-card" :style="cardStyle" @dblclick="copyToken">
+  <article
+    data-testid="account-card"
+    class="account-card"
+    :style="cardStyle"
+    @dblclick="copyToken"
+    @mousemove="handleMouseMove"
+    @mouseleave="handleMouseLeave"
+  >
+    <div class="account-card__glare" />
     <div class="account-card__actions">
       <button
         type="button"

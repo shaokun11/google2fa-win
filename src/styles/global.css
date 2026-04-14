@@ -240,12 +240,30 @@ select {
   border: 1px solid var(--button-border);
   box-shadow: rgba(0, 0, 0, 0.06) 0 12px 28px 0;
   user-select: none;
-  transition: transform 160ms ease, box-shadow 160ms ease;
+  transform-style: preserve-3d;
+  transform: perspective(800px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(0px);
+  transition: transform 300ms ease, box-shadow 300ms ease;
+  will-change: transform;
 }
 
 .account-card:hover {
-  transform: translateY(-2px);
-  box-shadow: rgba(0, 0, 0, 0.08) 0 16px 36px 0;
+  box-shadow: rgba(0, 0, 0, 0.12) 0 20px 50px 0, rgba(0, 0, 0, 0.06) 0 8px 20px 0;
+}
+
+.account-card__glare {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  pointer-events: none;
+  opacity: var(--glare-alpha, 0);
+  background: radial-gradient(
+    circle at var(--glare-x, 50%) var(--glare-y, 50%),
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.08) 30%,
+    transparent 60%
+  );
+  transition: opacity 200ms ease;
+  z-index: 1;
 }
 
 .account-card__actions {
@@ -256,6 +274,7 @@ select {
   gap: 4px;
   opacity: 0;
   transition: opacity 160ms ease;
+  z-index: 2;
 }
 
 .account-card:hover .account-card__actions {
