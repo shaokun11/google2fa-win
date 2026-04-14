@@ -8,5 +8,6 @@ contextBridge.exposeInMainWorld('electron', {
   copyText: async (value: string) => {
     clipboard.writeText(value)
     return ipcRenderer.invoke('clipboard:writeText', value)
-  }
+  },
+  setTitleBarTheme: (colors: { bg: string; text: string }) => ipcRenderer.invoke('window:setTitleBarTheme', colors)
 })

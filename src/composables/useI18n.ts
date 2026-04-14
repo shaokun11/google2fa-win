@@ -11,7 +11,7 @@ const readStored = (): LocalePreference => {
   if (raw === 'en' || raw === 'zh' || raw === 'system') {
     return raw
   }
-  return 'system'
+  return 'en'
 }
 
 export const useI18n = () => {
