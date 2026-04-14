@@ -11,6 +11,7 @@ import { useAccounts } from './composables/useAccounts'
 import { useI18n } from './composables/useI18n'
 import { useTheme } from './composables/useTheme'
 import { useTicker } from './composables/useTicker'
+import { useWaterRipple } from './composables/useWaterRipple'
 import { encodeMigrationUrl } from './utils/migrationProto'
 import { stringifyOtpAuthUri } from './utils/otpauthUri'
 import { generateQrDataUrl } from './utils/qr'
@@ -20,6 +21,9 @@ const accountStore = useAccounts()
 const i18n = useI18n()
 const theme = useTheme()
 const { now } = useTicker()
+
+const appShellRef = ref<HTMLElement | null>(null)
+useWaterRipple(() => appShellRef.value)
 
 const addModalOpen = ref(false)
 const editModalOpen = ref(false)
@@ -112,7 +116,7 @@ const handleCopyToken = async (token: string) => {
 </script>
 
 <template>
-  <main class="app-shell">
+  <main class="app-shell" ref="appShellRef">
     <AppHeader
       :title="i18n.t('app.title')"
       subtitle="Google 2FA Desktop"

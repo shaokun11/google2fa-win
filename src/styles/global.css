@@ -232,6 +232,7 @@ select {
   gap: 14px;
   border-radius: 16px;
   padding: 16px;
+  background: var(--card-background);
   border: 1px solid var(--button-border);
   box-shadow: rgba(0, 0, 0, 0.06) 0 12px 28px 0;
   user-select: none;

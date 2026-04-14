@@ -31,8 +31,15 @@ const root = protobuf.Root.fromJSON({
 
 const Payload = root.lookupType('MigrationPayload')
 
-const toBase64 = (bytes: Uint8Array): string => Buffer.from(bytes).toString('base64')
-const fromBase64 = (value: string): Uint8Array => Uint8Array.from(Buffer.from(value, 'base64'))
+const toBase64 = (bytes: Uint8Array): string => btoa(String.fromCharCode(...bytes))
+const fromBase64 = (value: string): Uint8Array => {
+  const binary = atob(value)
+  const bytes = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i)
+  }
+  return bytes
+}
 
 export const encodeMigrationUrl = (accounts: Account[]): string => {
   const message = Payload.create({
@@ -70,7 +77,7 @@ export const decodeMigrationUrl = (url: string): Account[] => {
     id: crypto.randomUUID(),
     service: item.issuer,
     account: item.name,
-    secret: OTPAuth.Secret.fromHex(Buffer.from(item.secret).toString('hex')).base32,
+    secret: OTPAuth.Secret.fromHex(Array.from(item.secret).map(b => b.toString(16).padStart(2, '0')).join('')).base32,
     algorithm: 'SHA1' as const,
     digits: item.digits === 1 ? 6 : 8,
     period: 30,

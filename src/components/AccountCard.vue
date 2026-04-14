@@ -68,20 +68,9 @@ const stringHash = (value: string): number => {
 const hue = computed(() => stringHash(props.account.secret) % 360)
 
 const cardStyle = computed(() => {
-  const h = hue.value
-  const theme = document.documentElement.dataset.theme as 'light' | 'dark' | 'one-dark' | undefined
-  const isDark = theme === 'dark' || theme === 'one-dark'
-
-  if (isDark) {
-    return {
-      background: `linear-gradient(135deg, hsl(${h} 40% 18%), hsl(${h} 30% 14%))`,
-      borderColor: `hsl(${h} 30% 25%)`
-    }
-  }
-
+  const accent = `hsl(${hue.value} 70% 55%)`
   return {
-    background: `linear-gradient(135deg, hsl(${h} 70% 94%), hsl(${h} 60% 88%))`,
-    borderColor: `hsl(${h} 50% 85%)`
+    borderLeft: `3px solid ${accent}`
   }
 })
 
@@ -100,131 +89,10 @@ const avatarStyle = computed(() => {
   const color = `hsl(${h} 70% 45%)`
   return { background: bg, color }
 })
-
-// Particle burst + heart converge effect
-const burstActive = ref(false)
-
-interface Particle {
-  x: number
-  y: number
-  vx: number
-  vy: number
-  size: number
-  hue: number
-  alpha: number
-  targetX: number
-  targetY: number
-}
-
-const triggerBurst = (e: MouseEvent) => {
-  const card = (e.currentTarget as HTMLElement)
-  const rect = card.getBoundingClientRect()
-  const cx = e.clientX - rect.left
-  const cy = e.clientY - rect.top
-  const w = rect.width
-  const h = rect.height
-  const hsl = hue.value
-
-  burstActive.value = true
-  const count = 40
-  const particles: Particle[] = []
-
-  // Heart shape target points (parametric)
-  const heartPoints: Array<{ x: number; y: number }> = []
-  const heartCx = w / 2
-  const heartCy = h / 2 - 10
-  const heartScale = Math.min(w, h) * 0.022
-  for (let i = 0; i < count; i++) {
-    const t = (i / count) * Math.PI * 2
-    const hx = 16 * Math.pow(Math.sin(t), 3)
-    const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))
-    heartPoints.push({
-      x: heartCx + hx * heartScale,
-      y: heartCy + hy * heartScale
-    })
-  }
-
-  for (let i = 0; i < count; i++) {
-    const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.5
-    const speed = 60 + Math.random() * 100
-    const target = heartPoints[i]
-    particles.push({
-      x: cx,
-      y: cy,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      size: 3 + Math.random() * 3,
-      hue: hsl + Math.floor(Math.random() * 60 - 30),
-      alpha: 1,
-      targetX: target.x,
-      targetY: target.y
-    })
-  }
-
-  const canvas = document.createElement('canvas')
-  canvas.width = w
-  canvas.height = h
-  canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;border-radius:16px;'
-  card.appendChild(canvas)
-  const ctx = canvas.getContext('2d')!
-
-  const duration = 1200
-  const explodePhase = 400
-  const start = performance.now()
-
-  const animate = (now: number) => {
-    const elapsed = now - start
-    ctx.clearRect(0, 0, w, h)
-
-    if (elapsed > duration) {
-      canvas.remove()
-      burstActive.value = false
-      return
-    }
-
-    const t = Math.min(elapsed / duration, 1)
-
-    for (const p of particles) {
-      if (t < explodePhase / duration) {
-        // Phase 1: explode outward
-        const et = elapsed / 1000
-        p.x += p.vx * (1 / 60)
-        p.y += p.vy * (1 / 60)
-        p.alpha = 1
-      } else {
-        // Phase 2: converge to heart
-        const ct = (t - explodePhase / duration) / (1 - explodePhase / duration)
-        const ease = ct * ct * (3 - 2 * ct) // smoothstep
-        const curX = p.x + (p.targetX - p.x) * 0.08
-        const curY = p.y + (p.targetY - p.y) * 0.08
-        p.x = curX
-        p.y = curY
-        p.alpha = 1 - ct * 0.3
-      }
-
-      ctx.beginPath()
-      ctx.arc(p.x, p.y, p.size * (burstActive.value ? 1 : 0.5), 0, Math.PI * 2)
-      ctx.fillStyle = `hsla(${p.hue} 80% 65% ${p.alpha})`
-      ctx.shadowColor = `hsla(${p.hue} 80% 65% 0.6)`
-      ctx.shadowBlur = 6
-      ctx.fill()
-    }
-
-    ctx.shadowBlur = 0
-    requestAnimationFrame(animate)
-  }
-
-  requestAnimationFrame(animate)
-}
-
-const handleDblClick = (e: MouseEvent) => {
-  copyToken()
-  triggerBurst(e)
-}
 </script>
 
 <template>
-  <article data-testid="account-card" class="account-card" :style="cardStyle" @dblclick="handleDblClick">
+  <article data-testid="account-card" class="account-card" :style="cardStyle" @dblclick="copyToken">
     <div class="account-card__actions">
       <button
         type="button"
