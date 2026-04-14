@@ -8,14 +8,35 @@
     "out/**/*",
     "package.json"
   ],
+  "extraResources": [
+    {
+      "from": "electron/assets",
+      "to": "assets"
+    }
+  ],
   "win": {
     "icon": "build/icon.ico",
     "target": [
       {
-        "target": "portable",
-        "arch": ["x64"]
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
       }
     ],
-    "artifactName": "Google2FA-Desktop-${version}.${ext}"
+    "artifactName": "Google2FA-Desktop-Setup-${version}.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "uninstallDisplayName": "Google 2FA Desktop",
+    "installerLanguages": [
+      "zh_CN",
+      "en_US"
+    ],
+    "language": 2052,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Google 2FA Desktop"
   }
 }

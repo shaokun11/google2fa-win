@@ -1,8 +1,15 @@
-import { BrowserWindow, Tray, Menu, ipcMain, nativeImage, shell } from 'electron'
+import { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage, shell } from 'electron'
 import { join } from 'node:path'
 
 let tray: Tray | null = null
 let allowQuit = false
+
+function getTrayIconPath(): string {
+  if (app.isPackaged) {
+    return join(process.resourcesPath, 'assets', 'tray-icon.png')
+  }
+  return join(__dirname, '../../electron/assets/tray-icon.png')
+}
 
 export const registerIpcHandlers = (window: BrowserWindow) => {
   ipcMain.handle('shell:openExternal', async (_event, url: string) => {
@@ -24,33 +31,37 @@ export const registerIpcHandlers = (window: BrowserWindow) => {
 
   ipcMain.handle('clipboard:writeText', (_event, value: string) => value)
 
-  if (!tray) {
-    const trayIcon = nativeImage.createFromPath(join(__dirname, '../assets/tray-icon.svg'))
-    tray = new Tray(trayIcon.resize({ width: 16, height: 16 }))
-    tray.setToolTip('Google 2FA Desktop')
-    tray.setContextMenu(Menu.buildFromTemplate([
-      {
-        label: 'Show',
-        click: () => {
-          window.show()
-          window.focus()
+  try {
+    if (!tray) {
+      const trayIcon = nativeImage.createFromPath(getTrayIconPath())
+      tray = new Tray(trayIcon.resize({ width: 16, height: 16 }))
+      tray.setToolTip('Google 2FA Desktop')
+      tray.setContextMenu(Menu.buildFromTemplate([
+        {
+          label: 'Show',
+          click: () => {
+            window.show()
+            window.focus()
+          }
+        },
+        {
+          label: 'Exit',
+          click: () => {
+            allowQuit = true
+            tray?.destroy()
+            tray = null
+            window.close()
+          }
         }
-      },
-      {
-        label: 'Exit',
-        click: () => {
-          allowQuit = true
-          tray?.destroy()
-          tray = null
-          window.close()
-        }
-      }
-    ]))
+      ]))
 
-    tray.on('double-click', () => {
-      window.show()
-      window.focus()
-    })
+      tray.on('double-click', () => {
+        window.show()
+        window.focus()
+      })
+    }
+  } catch (error) {
+    console.error('Failed to create tray icon:', error)
   }
 
   return {
