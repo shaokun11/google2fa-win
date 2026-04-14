@@ -354,14 +354,15 @@ select {
   height: 4px;
   overflow: hidden;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--progress-color) 12%, transparent);
+  background: color-mix(in srgb, var(--bar-color, var(--progress-color)) 15%, transparent);
 }
 
 .account-card__progress-bar {
   display: block;
   height: 100%;
-  background: var(--progress-color);
-  transition: width 300ms linear;
+  background: var(--bar-color, var(--progress-color));
+  transition: width 300ms linear, background-color 600ms ease;
+  border-radius: 999px;
 }
 
 .account-card__hint {

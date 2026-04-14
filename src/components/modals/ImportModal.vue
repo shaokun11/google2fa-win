@@ -33,13 +33,30 @@ const fileText = ref('')
 const qrFileName = ref('')
 
 const submitText = () => {
-  const accounts = fileText.value
+  const text = fileText.value.trim()
+  if (!text) return
+
+  // Handle otpauth-migration:// URLs
+  if (text.startsWith('otpauth-migration://')) {
+    try {
+      const accounts = decodeMigrationUrl(text)
+      emit('import-accounts', accounts)
+      fileText.value = ''
+      return
+    } catch {
+      return
+    }
+  }
+
+  // Handle otpauth:// URIs (one per line)
+  const accounts = text
     .split('\n')
     .map((value) => value.trim())
     .filter(Boolean)
     .map(parseOtpAuthUri)
 
   emit('import-accounts', accounts)
+  fileText.value = ''
 }
 
 const importQrFile = async (event: Event) => {

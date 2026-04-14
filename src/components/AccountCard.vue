@@ -67,6 +67,13 @@ const stringHash = (value: string): number => {
 
 const hue = computed(() => stringHash(props.account.secret) % 360)
 
+const progressColor = computed(() => {
+  const p = progress.value
+  if (p > 60) return `hsl(142 70% 45%)`
+  if (p > 30) return `hsl(${45 + ((p - 30) / 30) * 97} 85% 50%)`
+  return `hsl(${(p / 30) * 20} 85% 50%)`
+})
+
 const tiltX = ref(0)
 const tiltY = ref(0)
 const glareX = ref(50)
@@ -175,7 +182,7 @@ const avatarStyle = computed(() => {
     </button>
 
     <div class="account-card__footer">
-      <div class="account-card__progress">
+      <div class="account-card__progress" :style="{ '--bar-color': progressColor }">
         <span class="account-card__progress-bar" :style="{ width: `${progress}%` }" />
       </div>
       <span class="account-card__hint">{{ copied ? copiedText : copyHint }}</span>
