@@ -550,6 +550,12 @@ select {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus-ring) 18%, transparent);
 }
 
+.form-field input::placeholder,
+.stack input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
 .form-card__actions {
   display: flex;
   justify-content: flex-end;

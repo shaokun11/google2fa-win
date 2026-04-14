@@ -44,14 +44,28 @@ const form = reactive({
 })
 
 const resetForm = () => {
-  form.service = props.initial?.service ?? ''
-  form.account = props.initial?.account ?? ''
-  form.secret = props.initial?.secret ?? ''
+  if (props.mode === 'edit' && props.initial) {
+    form.service = props.initial.service
+    form.account = props.initial.account
+    form.secret = props.initial.secret
+  } else {
+    form.service = ''
+    form.account = ''
+    form.secret = ''
+  }
 }
 
 watch(() => props.open, (isOpen) => {
   if (isOpen) {
     resetForm()
+  }
+})
+
+watch(() => props.initial, (val) => {
+  if (props.open && props.mode === 'edit' && val) {
+    form.service = val.service
+    form.account = val.account
+    form.secret = val.secret
   }
 })
 
