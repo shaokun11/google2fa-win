@@ -12,9 +12,10 @@
     "icon": "build/icon.ico",
     "target": [
       {
-        "target": "dir",
+        "target": "portable",
         "arch": ["x64"]
       }
-    ]
+    ],
+    "artifactName": "Google2FA-Desktop-${version}.${ext}"
   }
 }
