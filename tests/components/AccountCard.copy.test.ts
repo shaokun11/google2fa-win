@@ -23,7 +23,9 @@ describe('AccountCard interactions', () => {
         copyHint: 'Click to copy',
         copiedText: 'Copied',
         editText: 'Edit',
-        deleteText: 'Delete'
+        deleteText: 'Delete',
+        deleteConfirmLabel: 'Delete',
+        deleteConfirmPlaceholder: 'Type delete'
       }
     })
 

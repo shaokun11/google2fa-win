@@ -11,6 +11,8 @@ defineProps<{
   cardCopiedText: string
   cardEditText: string
   cardDeleteText: string
+  cardDeleteConfirmLabel: string
+  cardDeleteConfirmPlaceholder: string
 }>()
 
 defineEmits<{
@@ -31,6 +33,8 @@ defineEmits<{
       :copied-text="cardCopiedText"
       :edit-text="cardEditText"
       :delete-text="cardDeleteText"
+      :delete-confirm-label="cardDeleteConfirmLabel"
+      :delete-confirm-placeholder="cardDeleteConfirmPlaceholder"
       @copy="$emit('copy', $event)"
       @edit="$emit('edit', $event)"
       @delete="$emit('delete', $event)"

@@ -353,6 +353,56 @@ select {
   min-height: 15px;
 }
 
+.account-card__delete-confirm {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid var(--button-border);
+  margin-top: 10px;
+  animation: fadeIn 150ms ease;
+}
+
+.account-card__delete-input {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--button-border);
+  background: var(--button-background);
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+  min-width: 0;
+  transition: border-color 150ms ease;
+}
+
+.account-card__delete-input:focus {
+  border-color: var(--danger, #e06c75);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--danger, #e06c75) 15%, transparent);
+}
+
+.account-card__delete-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background: var(--danger, #e06c75);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 150ms ease;
+}
+
+.account-card__delete-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.icon-button--active {
+  background: color-mix(in srgb, var(--danger, #e06c75) 15%, transparent);
+}
+
 /* Modal */
 .base-modal__backdrop {
   position: fixed;

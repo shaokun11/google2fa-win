@@ -10,6 +10,8 @@ const props = defineProps<{
   copiedText: string
   editText: string
   deleteText: string
+  deleteConfirmLabel: string
+  deleteConfirmPlaceholder: string
 }>()
 
 const emit = defineEmits<{
@@ -22,6 +24,9 @@ const token = computed(() => createTotpToken(props.account, props.now))
 const displayToken = computed(() => `${token.value.slice(0, 3)} ${token.value.slice(3)}`)
 const progress = computed(() => getTokenProgress(props.account.period, props.now))
 const copied = ref(false)
+const showDeleteConfirm = ref(false)
+const deleteInput = ref('')
+const deleteConfirmed = computed(() => deleteInput.value === '删除' || deleteInput.value === 'delete')
 
 const copyToken = async () => {
   emit('copy', token.value)
@@ -29,6 +34,27 @@ const copyToken = async () => {
   window.setTimeout(() => {
     copied.value = false
   }, 1200)
+}
+
+const handleDeleteClick = () => {
+  if (showDeleteConfirm.value) {
+    showDeleteConfirm.value = false
+    deleteInput.value = ''
+  } else {
+    showDeleteConfirm.value = true
+  }
+}
+
+const handleDeleteConfirm = () => {
+  if (!deleteConfirmed.value) return
+  emit('delete', props.account.id)
+  showDeleteConfirm.value = false
+  deleteInput.value = ''
+}
+
+const cancelDelete = () => {
+  showDeleteConfirm.value = false
+  deleteInput.value = ''
 }
 
 const stringHash = (value: string): number => {
@@ -66,7 +92,7 @@ const avatarStyle = computed(() => {
 </script>
 
 <template>
-  <article data-testid="account-card" class="account-card" :style="cardStyle">
+  <article data-testid="account-card" class="account-card" :style="cardStyle" @dblclick="copyToken">
     <div class="account-card__actions">
       <button
         type="button"
@@ -79,8 +105,9 @@ const avatarStyle = computed(() => {
       <button
         type="button"
         class="icon-button danger"
+        :class="{ 'icon-button--active': showDeleteConfirm }"
         :aria-label="deleteText"
-        @click="emit('delete', account.id)"
+        @click="handleDeleteClick"
       >
         🗑
       </button>
@@ -109,6 +136,26 @@ const avatarStyle = computed(() => {
         <span class="account-card__progress-bar" :style="{ width: `${progress}%` }" />
       </div>
       <span class="account-card__hint">{{ copied ? copiedText : copyHint }}</span>
+    </div>
+
+    <div v-if="showDeleteConfirm" class="account-card__delete-confirm" @click.stop>
+      <input
+        v-model="deleteInput"
+        type="text"
+        class="account-card__delete-input"
+        :placeholder="deleteConfirmPlaceholder"
+        autocomplete="off"
+        @keyup.enter="handleDeleteConfirm"
+        @keyup.escape="cancelDelete"
+      />
+      <button
+        type="button"
+        class="account-card__delete-btn"
+        :disabled="!deleteConfirmed"
+        @click="handleDeleteConfirm"
+      >
+        {{ deleteConfirmLabel }}
+      </button>
     </div>
   </article>
 </template>

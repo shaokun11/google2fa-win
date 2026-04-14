@@ -140,6 +140,8 @@ const handleCopyToken = async (token: string) => {
       :card-copied-text="i18n.t('card.copied')"
       :card-edit-text="i18n.t('card.edit')"
       :card-delete-text="i18n.t('card.delete')"
+      :card-delete-confirm-label="i18n.t('card.deleteConfirmLabel')"
+      :card-delete-confirm-placeholder="i18n.t('card.deleteConfirmPlaceholder')"
       @copy="handleCopyToken"
       @edit="handleEditAccount"
       @delete="handleDeleteAccount"

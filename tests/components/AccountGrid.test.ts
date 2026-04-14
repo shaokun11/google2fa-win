@@ -15,7 +15,9 @@ describe('AccountGrid', () => {
         cardCopyHint: 'Click to copy',
         cardCopiedText: 'Copied',
         cardEditText: 'Edit',
-        cardDeleteText: 'Delete'
+        cardDeleteText: 'Delete',
+        cardDeleteConfirmLabel: 'Delete',
+        cardDeleteConfirmPlaceholder: 'Type delete'
       }
     })
 

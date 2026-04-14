@@ -1,8 +1,8 @@
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, Menu } from 'electron'
 import { join } from 'node:path'
 
 export const createMainWindow = (): BrowserWindow => {
-  return new BrowserWindow({
+  const win = new BrowserWindow({
     width: 900,
     height: 600,
     minWidth: 640,
@@ -14,4 +14,8 @@ export const createMainWindow = (): BrowserWindow => {
       preload: join(__dirname, '../preload/index.js')
     }
   })
+
+  Menu.setApplicationMenu(null)
+
+  return win
 }
