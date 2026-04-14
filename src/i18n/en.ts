@@ -3,6 +3,7 @@ export default {
   'toolbar.add': 'Add',
   'toolbar.import': 'Import',
   'toolbar.export': 'Export',
+  'toolbar.batchDelete': 'Batch Delete',
   'toolbar.settings': 'Settings',
   'toolbar.searchPlaceholder': 'Search accounts',
   'card.copyHint': 'Click or double click to copy',
@@ -55,5 +56,11 @@ export default {
   'modal.settings.language': 'Language',
   'modal.settings.language.system': 'System',
   'modal.settings.language.en': 'English',
-  'modal.settings.language.zh': '中文'
+  'modal.settings.language.zh': '中文',
+  'modal.batchDelete.title': 'Batch Delete',
+  'modal.batchDelete.selectAll': 'Select all',
+  'modal.batchDelete.deleteButton': 'Delete',
+  'modal.batchDelete.confirmLabel': 'Type "delete" to confirm',
+  'modal.batchDelete.confirmPlaceholder': 'delete',
+  'modal.batchDelete.count': 'selected'
 } as const

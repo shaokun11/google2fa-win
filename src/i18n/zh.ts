@@ -3,6 +3,7 @@ export default {
   'toolbar.add': '添加',
   'toolbar.import': '导入',
   'toolbar.export': '导出',
+  'toolbar.batchDelete': '批量删除',
   'toolbar.settings': '设置',
   'toolbar.searchPlaceholder': '搜索账户',
   'card.copyHint': '单击或双击复制',
@@ -55,5 +56,11 @@ export default {
   'modal.settings.language': '语言',
   'modal.settings.language.system': '系统',
   'modal.settings.language.en': 'English',
-  'modal.settings.language.zh': '中文'
+  'modal.settings.language.zh': '中文',
+  'modal.batchDelete.title': '批量删除',
+  'modal.batchDelete.selectAll': '全选',
+  'modal.batchDelete.deleteButton': '删除',
+  'modal.batchDelete.confirmLabel': '输入"删除"以确认',
+  'modal.batchDelete.confirmPlaceholder': '删除',
+  'modal.batchDelete.count': '已选'
 } as const

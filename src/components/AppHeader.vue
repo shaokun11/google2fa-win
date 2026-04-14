@@ -9,6 +9,7 @@ defineProps<{
     import: string
     export: string
     settings: string
+    batchDelete: string
   }
 }>()
 
@@ -18,6 +19,7 @@ const emit = defineEmits<{
   import: []
   export: []
   settings: []
+  'batch-delete': []
   minimize: []
   close: []
 }>()
@@ -41,6 +43,7 @@ const emit = defineEmits<{
       <button type="button" @click="emit('add')">{{ labels.add }}</button>
       <button type="button" @click="emit('import')">{{ labels.import }}</button>
       <button type="button" @click="emit('export')">{{ labels.export }}</button>
+      <button type="button" @click="emit('batch-delete')">{{ labels.batchDelete }}</button>
       <button type="button" @click="emit('settings')">{{ labels.settings }}</button>
     </div>
   </header>

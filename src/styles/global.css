@@ -63,8 +63,14 @@ select {
 
 .app-shell {
   min-height: 100vh;
-  padding: 20px 24px 32px;
+  padding: 0 24px 32px;
   background: var(--app-background);
+}
+
+.drag-bar {
+  height: 34px;
+  -webkit-app-region: drag;
+  flex-shrink: 0;
 }
 
 /* Header */
@@ -74,18 +80,19 @@ select {
   gap: 16px;
   align-items: center;
   margin-bottom: 20px;
-  padding: 14px 18px;
-  border-radius: 16px;
+  padding: 6px 18px;
+  border-radius: 0 0 16px 16px;
   background: var(--card-background);
   border: 1px solid var(--button-border);
+  border-top: none;
   box-shadow: rgba(0, 0, 0, 0.06) 0 12px 32px;
+  -webkit-app-region: drag;
 }
 
 .app-header__brand {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  -webkit-app-region: drag;
   cursor: grab;
 }
 

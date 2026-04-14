@@ -5,6 +5,7 @@ import AccountGrid from './components/AccountGrid.vue'
 import AddModal from './components/modals/AddModal.vue'
 import ExportModal from './components/modals/ExportModal.vue'
 import ExportPreviewModal from './components/modals/ExportPreviewModal.vue'
+import BatchDeleteModal from './components/modals/BatchDeleteModal.vue'
 import ImportModal from './components/modals/ImportModal.vue'
 import SettingsModal from './components/modals/SettingsModal.vue'
 import { useAccounts } from './composables/useAccounts'
@@ -31,6 +32,7 @@ const importModalOpen = ref(false)
 const exportModalOpen = ref(false)
 const settingsModalOpen = ref(false)
 const exportPreviewOpen = ref(false)
+const batchDeleteOpen = ref(false)
 const exportPreview = ref('')
 const editingAccount = ref<ReturnType<typeof accountStore['filteredAccounts']['value'][number] | null>>(null)
 
@@ -54,6 +56,11 @@ const handleUpdateAccount = (payload: { service: string; account: string; secret
 
 const handleDeleteAccount = (id: string) => {
   accountStore.removeAccount(id)
+}
+
+const handleBatchDelete = (ids: string[]) => {
+  ids.forEach((id) => accountStore.removeAccount(id))
+  batchDeleteOpen.value = false
 }
 
 const handleImportAccounts = (accounts: Array<{ service: string; account: string; secret: string }>) => {
@@ -117,6 +124,7 @@ const handleCopyToken = async (token: string) => {
 
 <template>
   <main class="app-shell" ref="appShellRef">
+    <div class="drag-bar"></div>
     <AppHeader
       :title="i18n.t('app.title')"
       subtitle="Google 2FA Desktop"
@@ -126,13 +134,15 @@ const handleCopyToken = async (token: string) => {
         add: i18n.t('toolbar.add'),
         import: i18n.t('toolbar.import'),
         export: i18n.t('toolbar.export'),
-        settings: i18n.t('toolbar.settings')
+        settings: i18n.t('toolbar.settings'),
+        batchDelete: i18n.t('toolbar.batchDelete')
       }"
       @update:search="accountStore.search.value = $event"
       @add="addModalOpen = true"
       @import="importModalOpen = true"
       @export="exportModalOpen = true"
       @settings="settingsModalOpen = true"
+      @batch-delete="batchDeleteOpen = true"
     />
 
     <AccountGrid
@@ -252,6 +262,21 @@ const handleCopyToken = async (token: string) => {
       :title="i18n.t('modal.exportPreview.title')"
       :image-src="exportPreview"
       @close="exportPreviewOpen = false"
+    />
+
+    <BatchDeleteModal
+      :open="batchDeleteOpen"
+      :accounts="accountStore.filteredAccounts.value"
+      :labels="{
+        title: i18n.t('modal.batchDelete.title'),
+        selectAll: i18n.t('modal.batchDelete.selectAll'),
+        deleteButton: i18n.t('modal.batchDelete.deleteButton'),
+        confirmLabel: i18n.t('modal.batchDelete.confirmLabel'),
+        confirmPlaceholder: i18n.t('modal.batchDelete.confirmPlaceholder'),
+        count: i18n.t('modal.batchDelete.count')
+      }"
+      @close="batchDeleteOpen = false"
+      @delete-confirmed="handleBatchDelete"
     />
   </main>
 </template>

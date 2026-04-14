@@ -14,6 +14,7 @@ describe('AppHeader', () => {
           add: 'Add',
           import: 'Import',
           export: 'Export',
+          batchDelete: 'Batch Delete',
           settings: 'Settings'
         }
       }
