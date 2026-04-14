@@ -5,14 +5,27 @@ import BaseButton from '../base/BaseButton.vue'
 
 const props = defineProps<{
   open: boolean
-  theme: 'system' | 'light' | 'dark'
+  theme: 'system' | 'light' | 'dark' | 'one-dark'
   locale: 'system' | 'en' | 'zh'
+  labels: {
+    title: string
+    themeLabel: string
+    themeSystem: string
+    themeLight: string
+    themeDark: string
+    themeOneDark: string
+    languageLabel: string
+    languageSystem: string
+    languageEn: string
+    languageZh: string
+    save: string
+  }
 }>()
 
 const emit = defineEmits<{
   close: []
   save: [{
-    theme: 'system' | 'light' | 'dark'
+    theme: 'system' | 'light' | 'dark' | 'one-dark'
     locale: 'system' | 'en' | 'zh'
   }]
 }>()
@@ -37,27 +50,30 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <BaseModal :open="open" title="Settings" @close="emit('close')">
-    <form class="stack" @submit.prevent="onSubmit">
-      <label>
-        Theme
+  <BaseModal :open="open" :title="labels.title" @close="emit('close')">
+    <form class="form-card" @submit.prevent="onSubmit">
+      <label class="form-field">
+        <span class="form-field__label">{{ labels.themeLabel }}</span>
         <select name="theme" v-model="form.theme">
-          <option value="system">System</option>
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
+          <option value="system">{{ labels.themeSystem }}</option>
+          <option value="light">{{ labels.themeLight }}</option>
+          <option value="dark">{{ labels.themeDark }}</option>
+          <option value="one-dark">{{ labels.themeOneDark }}</option>
         </select>
       </label>
 
-      <label>
-        Language
+      <label class="form-field">
+        <span class="form-field__label">{{ labels.languageLabel }}</span>
         <select name="locale" v-model="form.locale">
-          <option value="system">System</option>
-          <option value="en">English</option>
-          <option value="zh">中文</option>
+          <option value="system">{{ labels.languageSystem }}</option>
+          <option value="en">{{ labels.languageEn }}</option>
+          <option value="zh">{{ labels.languageZh }}</option>
         </select>
       </label>
 
-      <BaseButton type="submit">Save</BaseButton>
+      <div class="form-card__actions">
+        <BaseButton type="submit">{{ labels.save }}</BaseButton>
+      </div>
     </form>
   </BaseModal>
 </template>

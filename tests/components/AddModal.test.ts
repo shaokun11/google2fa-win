@@ -2,9 +2,25 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import AddModal from '../../src/components/modals/AddModal.vue'
 
+const labels = {
+  titleAdd: 'Add account',
+  titleEdit: 'Edit account',
+  descriptionAdd: 'Description',
+  descriptionEdit: 'Edit description',
+  serviceLabel: 'Service',
+  servicePlaceholder: 'Service',
+  accountLabel: 'Account',
+  accountPlaceholder: 'Account',
+  secretLabel: 'Secret',
+  secretPlaceholder: 'Secret',
+  cancel: 'Cancel',
+  saveAccount: 'Save account',
+  saveChanges: 'Save changes'
+}
+
 describe('AddModal', () => {
   it('emits submit payload for a valid manual account', async () => {
-    const wrapper = mount(AddModal, { props: { open: true } })
+    const wrapper = mount(AddModal, { props: { open: true, mode: 'add', labels } })
 
     await wrapper.get('input[name="service"]').setValue('Google')
     await wrapper.get('input[name="account"]').setValue('user@gmail.com')

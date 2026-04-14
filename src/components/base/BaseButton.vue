@@ -1,5 +1,5 @@
 <template>
-  <button class="base-button" :type="type">
+  <button class="base-button" :type="type" :disabled="disabled">
     <slot />
   </button>
 </template>
@@ -7,7 +7,9 @@
 <script setup lang="ts">
 withDefaults(defineProps<{
   type?: 'button' | 'submit' | 'reset'
+  disabled?: boolean
 }>(), {
-  type: 'button'
+  type: 'button',
+  disabled: false
 })
 </script>

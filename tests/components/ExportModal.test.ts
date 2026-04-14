@@ -6,9 +6,16 @@ const accounts = [{
   id: '1', service: 'Google', account: 'user@gmail.com', secret: 'JBSWY3DPEHPK3PXP', algorithm: 'SHA1', digits: 6, period: 30, order: 0, createdAt: 1
 }]
 
+const labels = {
+  title: 'Export accounts',
+  selectAll: 'Select all',
+  exportQr: 'Export QR',
+  exportText: 'Export text'
+}
+
 describe('ExportModal', () => {
   it('emits selected accounts for qr export', async () => {
-    const wrapper = mount(ExportModal, { props: { open: true, accounts } })
+    const wrapper = mount(ExportModal, { props: { open: true, accounts, labels } })
 
     await wrapper.get('input[type="checkbox"]').setValue(true)
     await wrapper.get('button[data-format="qr"]').trigger('click')

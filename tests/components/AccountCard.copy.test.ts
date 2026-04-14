@@ -1,13 +1,6 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import AccountCard from '../../src/components/AccountCard.vue'
-
-const writeText = vi.fn()
-Object.assign(navigator, {
-  clipboard: {
-    writeText
-  }
-})
 
 const account = {
   id: '1',
@@ -22,11 +15,20 @@ const account = {
 }
 
 describe('AccountCard interactions', () => {
-  it('copies the current token on double click', async () => {
-    const wrapper = mount(AccountCard, { props: { account, now: 0 } })
+  it('emits copy event with the current token on double click', async () => {
+    const wrapper = mount(AccountCard, {
+      props: {
+        account,
+        now: 0,
+        copyHint: 'Click to copy',
+        copiedText: 'Copied',
+        editText: 'Edit',
+        deleteText: 'Delete'
+      }
+    })
 
-    await wrapper.get('[data-testid="account-card"]').trigger('dblclick')
+    await wrapper.get('.account-card__token').trigger('click')
 
-    expect(writeText).toHaveBeenCalledWith('282760')
+    expect(wrapper.emitted('copy')?.[0]?.[0]).toBe('282760')
   })
 })

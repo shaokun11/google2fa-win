@@ -16,7 +16,16 @@ const account = {
 
 describe('AccountCard', () => {
   it('renders service, account, and a 6 digit token', () => {
-    const wrapper = mount(AccountCard, { props: { account, now: 0 } })
+    const wrapper = mount(AccountCard, {
+      props: {
+        account,
+        now: 0,
+        copyHint: 'Click to copy',
+        copiedText: 'Copied',
+        editText: 'Edit',
+        deleteText: 'Delete'
+      }
+    })
     expect(wrapper.text()).toContain('Google')
     expect(wrapper.text()).toContain('user@gmail.com')
     expect(wrapper.text()).toMatch(/\d{3}\s\d{3}/)

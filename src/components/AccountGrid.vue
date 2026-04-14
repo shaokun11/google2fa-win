@@ -5,6 +5,18 @@ import AccountCard from './AccountCard.vue'
 defineProps<{
   accounts: Account[]
   now: number
+  emptyTitle: string
+  emptyDescription: string
+  cardCopyHint: string
+  cardCopiedText: string
+  cardEditText: string
+  cardDeleteText: string
+}>()
+
+defineEmits<{
+  copy: [token: string]
+  edit: [account: Account]
+  delete: [id: string]
 }>()
 </script>
 
@@ -15,6 +27,18 @@ defineProps<{
       :key="account.id"
       :account="account"
       :now="now"
+      :copy-hint="cardCopyHint"
+      :copied-text="cardCopiedText"
+      :edit-text="cardEditText"
+      :delete-text="cardDeleteText"
+      @copy="$emit('copy', $event)"
+      @edit="$emit('edit', $event)"
+      @delete="$emit('delete', $event)"
     />
+
+    <div v-if="accounts.length === 0" class="empty-state">
+      <h2 class="empty-state__title">{{ emptyTitle }}</h2>
+      <p class="empty-state__description">{{ emptyDescription }}</p>
+    </div>
   </section>
 </template>

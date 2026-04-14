@@ -5,10 +5,26 @@ import BaseButton from '../base/BaseButton.vue'
 
 const props = defineProps<{
   open: boolean
+  mode: 'add' | 'edit'
   initial?: {
     service: string
     account: string
     secret: string
+  }
+  labels: {
+    titleAdd: string
+    titleEdit: string
+    descriptionAdd: string
+    descriptionEdit: string
+    serviceLabel: string
+    servicePlaceholder: string
+    accountLabel: string
+    accountPlaceholder: string
+    secretLabel: string
+    secretPlaceholder: string
+    cancel: string
+    saveAccount: string
+    saveChanges: string
   }
 }>()
 
@@ -22,20 +38,26 @@ const emit = defineEmits<{
 }>()
 
 const form = reactive({
-  service: props.initial?.service ?? '',
-  account: props.initial?.account ?? '',
-  secret: props.initial?.secret ?? ''
+  service: '',
+  account: '',
+  secret: ''
 })
 
-watch(
-  () => props.initial,
-  (value) => {
-    form.service = value?.service ?? ''
-    form.account = value?.account ?? ''
-    form.secret = value?.secret ?? ''
-  },
-  { immediate: true }
-)
+const resetForm = () => {
+  form.service = props.initial?.service ?? ''
+  form.account = props.initial?.account ?? ''
+  form.secret = props.initial?.secret ?? ''
+}
+
+watch(() => props.open, (isOpen) => {
+  if (isOpen) {
+    resetForm()
+  }
+})
+
+const title = () => props.mode === 'add' ? props.labels.titleAdd : props.labels.titleEdit
+const description = () => props.mode === 'add' ? props.labels.descriptionAdd : props.labels.descriptionEdit
+const submitLabel = () => props.mode === 'add' ? props.labels.saveAccount : props.labels.saveChanges
 
 const onSubmit = () => {
   emit('submit', {
@@ -47,31 +69,47 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <BaseModal :open="open" title="Add account" @close="emit('close')">
+  <BaseModal :open="open" :title="title()" @close="emit('close')">
     <form class="form-card" @submit.prevent="onSubmit">
       <div class="form-card__intro">
-        <p class="form-card__title">Add a new authenticator account</p>
-        <p class="form-card__description">Enter the issuer, account label, and Base32 secret from the service you want to secure.</p>
+        <p class="form-card__description">{{ description() }}</p>
       </div>
 
       <label class="form-field">
-        <span class="form-field__label">Service</span>
-        <input name="service" v-model="form.service" placeholder="Google, GitHub, Microsoft..." />
+        <span class="form-field__label">{{ labels.serviceLabel }}</span>
+        <input
+          name="service"
+          v-model="form.service"
+          :placeholder="labels.servicePlaceholder"
+          autocomplete="off"
+        />
       </label>
 
       <label class="form-field">
-        <span class="form-field__label">Account</span>
-        <input name="account" v-model="form.account" placeholder="user@example.com" />
+        <span class="form-field__label">{{ labels.accountLabel }}</span>
+        <input
+          name="account"
+          v-model="form.account"
+          :placeholder="labels.accountPlaceholder"
+          autocomplete="off"
+        />
       </label>
 
       <label class="form-field">
-        <span class="form-field__label">Secret key</span>
-        <input name="secret" v-model="form.secret" placeholder="JBSWY3DPEHPK3PXP" />
+        <span class="form-field__label">{{ labels.secretLabel }}</span>
+        <input
+          name="secret"
+          v-model="form.secret"
+          :placeholder="labels.secretPlaceholder"
+          autocomplete="off"
+        />
       </label>
 
       <div class="form-card__actions">
-        <button type="button" class="ghost-button" @click="emit('close')">Cancel</button>
-        <BaseButton type="submit">Save account</BaseButton>
+        <button type="button" class="ghost-button" @click="emit('close')">
+          {{ labels.cancel }}
+        </button>
+        <BaseButton type="submit">{{ submitLabel() }}</BaseButton>
       </div>
     </form>
   </BaseModal>

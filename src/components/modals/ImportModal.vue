@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import BaseModal from '../base/BaseModal.vue'
 import BaseButton from '../base/BaseButton.vue'
 import { decodeQrImage } from '../../utils/qr'
@@ -8,6 +8,15 @@ import { parseOtpAuthUri } from '../../utils/otpauthUri'
 
 const props = defineProps<{
   open: boolean
+  labels: {
+    title: string
+    tabQr: string
+    tabFile: string
+    manualImport: string
+    filePlaceholder: string
+    qrHint: string
+    qrButton: string
+  }
 }>()
 
 const emit = defineEmits<{
@@ -19,21 +28,9 @@ const emit = defineEmits<{
   }>]
 }>()
 
-const activeTab = ref<'qr' | 'manual' | 'file'>('qr')
-const manualForm = reactive({
-  service: '',
-  account: '',
-  secret: ''
-})
+const activeTab = ref<'qr' | 'file'>('qr')
 const fileText = ref('')
-
-const submitManual = () => {
-  emit('import-accounts', [{
-    service: manualForm.service.trim(),
-    account: manualForm.account.trim(),
-    secret: manualForm.secret.trim()
-  }])
-}
+const qrFileName = ref('')
 
 const submitText = () => {
   const accounts = fileText.value
@@ -45,39 +42,63 @@ const submitText = () => {
   emit('import-accounts', accounts)
 }
 
-const importQrFile = async (file: File) => {
+const importQrFile = async (event: Event) => {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+  qrFileName.value = file.name
   const value = await decodeQrImage(file)
   emit('import-accounts', decodeMigrationUrl(value))
+  qrFileName.value = ''
+  input.value = ''
 }
 </script>
 
 <template>
-  <BaseModal :open="props.open" title="Import accounts" @close="emit('close')">
+  <BaseModal :open="props.open" :title="labels.title" @close="emit('close')">
     <div class="stack">
       <div class="tab-row">
-        <button type="button" data-tab="qr" @click="activeTab = 'qr'">QR</button>
-        <button type="button" data-tab="manual" @click="activeTab = 'manual'">Manual</button>
-        <button type="button" data-tab="file" @click="activeTab = 'file'">File</button>
+        <button
+          type="button"
+          data-tab="qr"
+          :class="{ active: activeTab === 'qr' }"
+          @click="activeTab = 'qr'"
+        >
+          {{ labels.tabQr }}
+        </button>
+        <button
+          type="button"
+          data-tab="file"
+          :class="{ active: activeTab === 'file' }"
+          @click="activeTab = 'file'"
+        >
+          {{ labels.tabFile }}
+        </button>
       </div>
 
-      <div v-if="activeTab === 'manual'">
-        <form class="stack" @submit.prevent="submitManual">
-          <input name="service" v-model="manualForm.service" placeholder="Service" />
-          <input name="account" v-model="manualForm.account" placeholder="Account" />
-          <input name="secret" v-model="manualForm.secret" placeholder="Secret" />
-          <BaseButton type="submit">Import</BaseButton>
-        </form>
-      </div>
-
-      <div v-else-if="activeTab === 'file'">
+      <div v-if="activeTab === 'file'">
         <form class="stack" @submit.prevent="submitText">
-          <textarea v-model="fileText" rows="6" placeholder="otpauth://..."></textarea>
-          <BaseButton type="submit">Import</BaseButton>
+          <textarea
+            v-model="fileText"
+            rows="8"
+            :placeholder="labels.filePlaceholder"
+          />
+          <BaseButton type="submit">{{ labels.manualImport }}</BaseButton>
         </form>
       </div>
 
       <div v-else class="stack">
-        <input type="file" accept="image/*" @change="importQrFile(($event.target as HTMLInputElement).files?.[0] as File)" />
+        <p class="form-card__description">{{ labels.qrHint }}</p>
+        <label class="file-upload">
+          <input
+            type="file"
+            accept="image/*"
+            class="file-upload__input"
+            @change="importQrFile"
+          />
+          <span class="file-upload__button">{{ labels.qrButton }}</span>
+          <span v-if="qrFileName" class="file-upload__name">{{ qrFileName }}</span>
+        </label>
       </div>
     </div>
   </BaseModal>

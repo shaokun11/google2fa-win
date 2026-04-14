@@ -7,7 +7,15 @@ describe('AppHeader', () => {
     const wrapper = mount(AppHeader, {
       props: {
         title: 'Authenticator',
-        search: ''
+        subtitle: 'Google 2FA Desktop',
+        search: '',
+        searchPlaceholder: 'Search',
+        labels: {
+          add: 'Add',
+          import: 'Import',
+          export: 'Export',
+          settings: 'Settings'
+        }
       }
     })
 
