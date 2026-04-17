@@ -4,6 +4,7 @@ export interface ElectronBridge {
   hideToTray: () => Promise<unknown>
   quitApplication: () => Promise<unknown>
   copyText: (value: string) => Promise<unknown>
+  saveFile: (content: string, defaultName: string) => Promise<boolean>
   setTitleBarTheme: (colors: { bg: string; text: string }) => Promise<unknown>
 }
 

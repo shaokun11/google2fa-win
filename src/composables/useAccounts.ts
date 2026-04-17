@@ -58,6 +58,7 @@ export const useAccounts = () => {
     filteredAccounts,
     addAccount,
     updateAccount,
-    removeAccount
+    removeAccount,
+    persist
   }
 }

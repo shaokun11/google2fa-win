@@ -12,7 +12,9 @@ const props = defineProps<{
     selectAll: string
     exportQr: string
     exportText: string
+    exportFile: string
     copied: string
+    saved: string
   }
 }>()
 
@@ -20,15 +22,18 @@ const emit = defineEmits<{
   close: []
   'export-qr': [Account[]]
   'export-text': [Account[]]
+  'export-file': [Account[]]
 }>()
 
 const selectedIds = ref<string[]>([])
 const showCopied = ref(false)
+const showSaved = ref(false)
 
 watch(() => props.open, (isOpen) => {
   if (!isOpen) {
     selectedIds.value = []
     showCopied.value = false
+    showSaved.value = false
   }
 })
 
@@ -70,6 +75,15 @@ const handleExportText = () => {
 const handleExportQr = () => {
   if (selectedAccounts.value.length === 0) return
   emit('export-qr', selectedAccounts.value)
+}
+
+const handleExportFile = () => {
+  if (selectedAccounts.value.length === 0) return
+  emit('export-file', selectedAccounts.value)
+  showSaved.value = true
+  window.setTimeout(() => {
+    showSaved.value = false
+  }, 2000)
 }
 </script>
 
@@ -137,6 +151,15 @@ const handleExportQr = () => {
           @click="handleExportText"
         >
           {{ showCopied ? labels.copied : labels.exportText }}
+        </button>
+        <button
+          type="button"
+          class="export-actions__btn base-button"
+          data-format="file"
+          :disabled="selectedAccounts.length === 0"
+          @click="handleExportFile"
+        >
+          {{ showSaved ? labels.saved : labels.exportFile }}
         </button>
       </div>
     </div>
@@ -268,7 +291,7 @@ const handleExportQr = () => {
 
 .export-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
   margin-top: 4px;
 }

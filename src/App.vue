@@ -13,6 +13,8 @@ import { useI18n } from './composables/useI18n'
 import { useTheme } from './composables/useTheme'
 import { useTicker } from './composables/useTicker'
 import { useWaterRipple } from './composables/useWaterRipple'
+import { useLayoutPreference } from './composables/useLayoutPreference'
+import LayoutSwitcher from './components/layout/LayoutSwitcher.vue'
 import { encodeMigrationUrl } from './utils/migrationProto'
 import { generateQrDataUrl } from './utils/qr'
 import './styles/global.css'
@@ -21,6 +23,7 @@ const accountStore = useAccounts()
 const i18n = useI18n()
 const theme = useTheme()
 const { now } = useTicker()
+const layoutPref = useLayoutPreference()
 
 const appShellRef = ref<HTMLElement | null>(null)
 useWaterRipple(() => appShellRef.value)
@@ -94,6 +97,26 @@ const handleExportText = async (accounts: typeof accountStore.accounts.value) =>
   }
 }
 
+const handleExportFile = async (accounts: typeof accountStore.accounts.value) => {
+  if (accounts.length === 0) {
+    return
+  }
+
+  const text = encodeMigrationUrl(accounts)
+
+  if (window.electron?.saveFile) {
+    await window.electron.saveFile(text, 'google2fa-export.txt')
+  } else {
+    const blob = new Blob([text], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'google2fa-export.txt'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+}
+
 const handleSaveSettings = (payload: { theme: 'system' | 'light' | 'dark' | 'one-dark'; locale: 'system' | 'en' | 'zh' }) => {
   theme.setTheme(payload.theme)
   i18n.setLocale(payload.locale)
@@ -118,6 +141,11 @@ const handleCopyToken = async (token: string) => {
   } else {
     await navigator.clipboard.writeText(token)
   }
+}
+
+const handleReorder = (reordered: typeof accountStore.accounts.value) => {
+  accountStore.accounts.value = reordered
+  accountStore.persist()
 }
 </script>
 
@@ -144,7 +172,20 @@ const handleCopyToken = async (token: string) => {
       @batch-delete="batchDeleteOpen = true"
     />
 
+    <div class="layout-bar">
+      <LayoutSwitcher
+        :mode="layoutPref.mode.value"
+        :labels="{
+          grid: i18n.t('layout.grid'),
+          list: i18n.t('layout.list'),
+          circular: i18n.t('layout.circular')
+        }"
+        @change="layoutPref.setMode"
+      />
+    </div>
+
     <AccountGrid
+      :mode="layoutPref.mode.value"
       :accounts="accountStore.filteredAccounts.value"
       :now="now"
       :empty-title="i18n.t('empty.title')"
@@ -158,6 +199,7 @@ const handleCopyToken = async (token: string) => {
       @copy="handleCopyToken"
       @edit="handleEditAccount"
       @delete="handleDeleteAccount"
+      @reorder="handleReorder"
     />
 
     <AddModal
@@ -228,11 +270,14 @@ const handleCopyToken = async (token: string) => {
         selectAll: i18n.t('modal.export.selectAll'),
         exportQr: i18n.t('modal.export.exportQr'),
         exportText: i18n.t('modal.export.exportText'),
-        copied: i18n.t('modal.export.copied')
+        exportFile: i18n.t('modal.export.exportFile'),
+        copied: i18n.t('modal.export.copied'),
+        saved: i18n.t('modal.export.saved')
       }"
       @close="exportModalOpen = false"
       @export-qr="handleExportQr"
       @export-text="handleExportText"
+      @export-file="handleExportFile"
     />
 
     <SettingsModal

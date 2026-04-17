@@ -1,5 +1,6 @@
-import { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage, shell } from 'electron'
+import { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage, shell, dialog } from 'electron'
 import { join } from 'node:path'
+import { writeFile } from 'node:fs/promises'
 
 let tray: Tray | null = null
 let allowQuit = false
@@ -30,6 +31,16 @@ export const registerIpcHandlers = (window: BrowserWindow) => {
   })
 
   ipcMain.handle('clipboard:writeText', (_event, value: string) => value)
+
+  ipcMain.handle('dialog:saveFile', async (_event, { content, defaultName }: { content: string; defaultName: string }) => {
+    const { canceled, filePath } = await dialog.showSaveDialog(window, {
+      defaultPath: defaultName,
+      filters: [{ name: 'Text Files', extensions: ['txt'] }]
+    })
+    if (canceled || !filePath) return false
+    await writeFile(filePath, content, 'utf-8')
+    return true
+  })
 
   try {
     if (!tray) {

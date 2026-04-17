@@ -40,7 +40,9 @@ export default {
   'modal.export.selectAll': '全选',
   'modal.export.exportQr': '导出 QR',
   'modal.export.exportText': '导出文本',
+  'modal.export.exportFile': '导出文件',
   'modal.export.copied': '已复制到剪贴板',
+  'modal.export.saved': '文件已保存',
   'modal.exportPreview.title': '导出 QR',
   'modal.delete.title': '删除账户',
   'modal.delete.description': '此操作不可撤销，账户及其 TOTP 密钥将被永久删除。',
@@ -62,5 +64,8 @@ export default {
   'modal.batchDelete.deleteButton': '删除',
   'modal.batchDelete.confirmLabel': '输入"删除"以确认',
   'modal.batchDelete.confirmPlaceholder': '删除',
-  'modal.batchDelete.count': '已选'
+  'modal.batchDelete.count': '已选',
+  'layout.grid': '网格',
+  'layout.list': '列表',
+  'layout.circular': '环形'
 } as const

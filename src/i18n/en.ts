@@ -40,7 +40,9 @@ export default {
   'modal.export.selectAll': 'Select all',
   'modal.export.exportQr': 'Export QR',
   'modal.export.exportText': 'Export text',
+  'modal.export.exportFile': 'Export file',
   'modal.export.copied': 'Copied to clipboard',
+  'modal.export.saved': 'File saved',
   'modal.exportPreview.title': 'Export QR',
   'modal.delete.title': 'Delete account',
   'modal.delete.description': 'This action cannot be undone. The account and its TOTP secret will be permanently removed.',
@@ -62,5 +64,8 @@ export default {
   'modal.batchDelete.deleteButton': 'Delete',
   'modal.batchDelete.confirmLabel': 'Type "delete" to confirm',
   'modal.batchDelete.confirmPlaceholder': 'delete',
-  'modal.batchDelete.count': 'selected'
+  'modal.batchDelete.count': 'selected',
+  'layout.grid': 'Grid',
+  'layout.list': 'List',
+  'layout.circular': 'Circular'
 } as const

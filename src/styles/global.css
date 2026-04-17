@@ -133,6 +133,14 @@ select {
   -webkit-app-region: drag;
 }
 
+/* Layout bar */
+.layout-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+  -webkit-app-region: no-drag;
+}
+
 .app-header__brand {
   display: flex;
   flex-direction: column;
@@ -253,6 +261,22 @@ select {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
+}
+
+/* Draggable ghost/drag states */
+.grid-ghost {
+  opacity: 0;
+}
+.grid-drag {
+  opacity: 0.9;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: rotate(2deg) scale(1.04);
+  z-index: 9999;
+}
+.account-card.sortable-chosen {
+  box-shadow: rgba(0, 0, 0, 0.18) 0 24px 60px 0, rgba(0, 0, 0, 0.1) 0 8px 24px 0;
+  transform: perspective(800px) scale(1.03);
+  z-index: 10;
 }
 
 .empty-state {

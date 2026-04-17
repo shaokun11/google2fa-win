@@ -20,7 +20,8 @@
     "protobufjs": "^7.4.0",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.4",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

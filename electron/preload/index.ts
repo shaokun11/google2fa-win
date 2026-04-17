@@ -9,5 +9,7 @@ contextBridge.exposeInMainWorld('electron', {
     clipboard.writeText(value)
     return ipcRenderer.invoke('clipboard:writeText', value)
   },
+  saveFile: (content: string, defaultName: string) =>
+    ipcRenderer.invoke('dialog:saveFile', { content, defaultName }),
   setTitleBarTheme: (colors: { bg: string; text: string }) => ipcRenderer.invoke('window:setTitleBarTheme', colors)
 })
